@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class MoveController : MonoBehaviour
 {
     DriverController _driverController;
-
     bool _go = false;
 
     private void Start()
