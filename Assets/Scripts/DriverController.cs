@@ -18,6 +18,10 @@ public class DriverController : MonoBehaviour
     [SerializeField] private float boosterTime;
     [SerializeField] private float slowdownTime;
 
+    [Header("Positions")]
+    [SerializeField] private List<Vector3> boosterPosition;
+    [SerializeField] private List<Vector3> slowdownPosition;
+
     private FixedJoystick _fixedJoystick;
     private GameObject _booster;
     private GameObject _newBooster;
@@ -88,12 +92,12 @@ public class DriverController : MonoBehaviour
 
     void CreateObjectBooster()
     {
-        _newBooster = Instantiate(_booster, new Vector3 (Random.Range(-10,10), Random.Range(-10,10),0), Quaternion.Euler(0,0,0));
+        _newBooster = Instantiate(_booster, boosterPosition[Random.Range(0, boosterPosition.Count)], Quaternion.Euler(0,0,0));
     }
 
     void CreateObjectSlowdown()
     {
-        _newSlowdown = Instantiate(_slowdown, new Vector3(Random.Range(-10, 10), Random.Range(-10, 10), 0), Quaternion.Euler(0, 0, 0));
+        _newSlowdown = Instantiate(_slowdown, slowdownPosition[Random.Range(0, slowdownPosition.Count)], Quaternion.Euler(0, 0, 0));
     }
 
     IEnumerator BoostEmergence()
