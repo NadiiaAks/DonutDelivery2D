@@ -22,11 +22,15 @@ public class DriverController : MonoBehaviour
     [SerializeField] private List<Vector3> boosterPosition;
     [SerializeField] private List<Vector3> slowdownPosition;
 
+    [Header("Screens")]
+    [SerializeField] private GameObject gameOverScreen;
+
     private FixedJoystick _fixedJoystick;
     private GameObject _booster;
     private GameObject _newBooster;
     private GameObject _slowdown;
     private GameObject _newSlowdown;
+    
 
     // for mowing
     private float _rotateAmount;
@@ -197,6 +201,17 @@ public class DriverController : MonoBehaviour
             _moveSpeed = slowSpeed;
             _isSlow = true;
         }
+
+        if(other.tag == "Killer")
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        gameObject.SetActive(false);
+        gameOverScreen.SetActive(true);
     }
 
 }
