@@ -13,24 +13,32 @@ public class DriverController : MonoBehaviour
     [Header("Timers")]
     [SerializeField] private float timeToWaitBooster;
     [SerializeField] private float timeToWaitSlowdown;
+    [SerializeField] private float timeToWaitCatch;
     [SerializeField] private float timeToDeleteBooster;
     [SerializeField] private float timeToDeleteSlowdown;
+    [SerializeField] private float timeToDeleteCatch;
     [SerializeField] private float boosterTime;
     [SerializeField] private float slowdownTime;
+    [SerializeField] private float catchTime;
 
     [Header("Positions")]
     [SerializeField] private List<Vector3> boosterPosition;
     [SerializeField] private List<Vector3> slowdownPosition;
+    [SerializeField] private List<Vector3> catchPosition;
 
     [Header("Screens")]
     [SerializeField] private GameObject gameOverScreen;
+
+    [SerializeField] private int CatchInLevel;
 
     private FixedJoystick _fixedJoystick;
     private GameObject _booster;
     private GameObject _newBooster;
     private GameObject _slowdown;
     private GameObject _newSlowdown;
-    
+    private GameObject _catch;
+    private GameObject _newCatch;
+
 
     // for mowing
     private float _rotateAmount;
@@ -49,16 +57,26 @@ public class DriverController : MonoBehaviour
     private bool _isWaitingSlowdown = true;
     private float _slowdownTime;
 
+
+    //for catch
+    private bool _isCatch = false;
+    private int _catchCount = 0;
+    private bool _isFull;
+
     private void Start()
     {
         _moveSpeed = moveSpeed;
         _fixedJoystick = GameObject.FindGameObjectWithTag("Joystick").GetComponent<FixedJoystick>();
         _booster = GameObject.FindGameObjectWithTag("Boost");
         _slowdown = GameObject.FindGameObjectWithTag("Slow");
+        _catch = GameObject.FindGameObjectWithTag("Catch");
         _waitTimeBooster = timeToWaitBooster;
         _waitTimeSlowdown = timeToWaitSlowdown;
         _boosterTime = boosterTime;
         _slowdownTime = slowdownTime;
+
+        CreateObjectCatch();
+
     }
 
     void Update()
@@ -77,6 +95,9 @@ public class DriverController : MonoBehaviour
         //Slowdown work
         SlowDownRespawn();
         GoWithSlowdown();
+
+        //CatchWork
+        CatchRespawn();
 
     }
 
@@ -104,6 +125,11 @@ public class DriverController : MonoBehaviour
         _newSlowdown = Instantiate(_slowdown, slowdownPosition[Random.Range(0, slowdownPosition.Count)], Quaternion.Euler(0, 0, 0));
     }
 
+    void CreateObjectCatch()
+    {
+        _newCatch = Instantiate(_catch, catchPosition[Random.Range(0, catchPosition.Count)], Quaternion.Euler(0, 0, 0));
+    }
+
     IEnumerator BoostEmergence()
     {
         CreateObjectBooster();
@@ -119,6 +145,12 @@ public class DriverController : MonoBehaviour
         yield return new WaitForSeconds(timeToDeleteSlowdown);
         Destroy(_newSlowdown);
         _isWaitingSlowdown = true;
+    }
+
+    private void NewCatch()
+    {
+        _isCatch = false;
+        CreateObjectCatch();
 
     }
 
@@ -156,6 +188,17 @@ public class DriverController : MonoBehaviour
         }
     }
 
+    //Timer for respawn catch
+    private void CatchRespawn()
+    {
+        if (_isCatch)
+        {
+            Destroy(_newCatch);
+            NewCatch();
+        }
+
+    }
+
     //Timer for working booster (how long car go with high speed)
     private void GoWithBooster()
     {
@@ -188,6 +231,25 @@ public class DriverController : MonoBehaviour
 
     }
 
+    private void CountCatch()
+    {
+        if (!_isFull)
+        {
+            _catchCount++;
+            Debug.Log(_catchCount);
+        }
+        else
+        {
+            _isFull = true;
+        }
+    }
+
+    public int GetCountCatch()
+    {
+        return _catchCount;
+    }
+
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Boost")
@@ -205,6 +267,12 @@ public class DriverController : MonoBehaviour
         if(other.tag == "Killer")
         {
             Die();
+        }
+
+        if(other.tag == "Catch")
+        {
+            _isCatch = true;
+            CountCatch();
         }
     }
 
