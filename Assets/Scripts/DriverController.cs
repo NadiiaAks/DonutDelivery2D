@@ -19,7 +19,6 @@ public class DriverController : MonoBehaviour
     [SerializeField] private float timeToDeleteCatch;
     [SerializeField] private float boosterTime;
     [SerializeField] private float slowdownTime;
-    [SerializeField] private float catchTime;
 
     [Header("Positions")]
     [SerializeField] private List<Vector3> boosterPosition;
@@ -147,10 +146,15 @@ public class DriverController : MonoBehaviour
         _isWaitingSlowdown = true;
     }
 
-    private void NewCatch()
+    IEnumerator CatchEmergence()
     {
+        Destroy(_newCatch);
         _isCatch = false;
-        CreateObjectCatch();
+        if (!_isFull)
+        {
+            yield return new WaitForSeconds(timeToDeleteCatch);
+            CreateObjectCatch();
+        }
 
     }
 
@@ -193,8 +197,7 @@ public class DriverController : MonoBehaviour
     {
         if (_isCatch)
         {
-            Destroy(_newCatch);
-            NewCatch();
+            StartCoroutine(CatchEmergence());
         }
 
     }
@@ -240,13 +243,24 @@ public class DriverController : MonoBehaviour
         }
         else
         {
+            // появится объект для приема 
+        }
+
+        if(_catchCount == CatchInLevel)
+        {
             _isFull = true;
         }
     }
 
+
     public int GetCountCatch()
     {
         return _catchCount;
+    }
+
+    public int GetCatchInLevel()
+    {
+        return CatchInLevel;
     }
 
 
