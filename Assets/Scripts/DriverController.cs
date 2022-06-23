@@ -241,17 +241,13 @@ public class DriverController : MonoBehaviour
             _catchCount++;
             Debug.Log(_catchCount);
         }
-        else
-        {
-            // появится объект для приема 
-        }
+
 
         if(_catchCount == CatchInLevel)
         {
             _isFull = true;
         }
     }
-
 
     public int GetCountCatch()
     {
@@ -262,7 +258,6 @@ public class DriverController : MonoBehaviour
     {
         return CatchInLevel;
     }
-
 
     private void OnTriggerEnter2D(Collider2D other)
     {

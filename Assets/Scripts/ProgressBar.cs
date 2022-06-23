@@ -9,6 +9,7 @@ public class ProgressBar : MonoBehaviour
     [SerializeField] private Slider progressBar;
     [SerializeField] private GameObject slider;
     [SerializeField] private GameObject notification;
+    [SerializeField] GameObject finishLocation;
 
     private DriverController _driver;
     private int progress;
@@ -34,6 +35,7 @@ public class ProgressBar : MonoBehaviour
         {
             slider.SetActive(false);
             notification.SetActive(true);
+            finishLocation.SetActive(true);
         }
     }
 }
