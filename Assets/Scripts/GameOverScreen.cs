@@ -12,9 +12,8 @@ public class GameOverScreen : MonoBehaviour
         Time.timeScale = 1f;
     }
 
-    public void ExitBtn()
+    public void MainMenuBtn()
     {
         SceneManager.LoadScene(0);
-        Time.timeScale = 1f;
     }
 }
