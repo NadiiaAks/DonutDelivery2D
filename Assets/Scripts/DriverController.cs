@@ -25,9 +25,7 @@ public class DriverController : MonoBehaviour
     [SerializeField] private List<Vector3> slowdownPosition;
     [SerializeField] private List<Vector3> catchPosition;
 
-    [Header("Screens")]
-    [SerializeField] private GameObject gameOverScreen;
-
+    [Header("Catch")]
     [SerializeField] private int CatchInLevel;
 
     private FixedJoystick _fixedJoystick;
@@ -273,22 +271,11 @@ public class DriverController : MonoBehaviour
             _isSlow = true;
         }
 
-        if(other.tag == "Killer")
-        {
-            Die();
-        }
-
         if(other.tag == "Catch")
         {
             _isCatch = true;
             CountCatch();
         }
-    }
-
-    private void Die()
-    {
-        gameObject.SetActive(false);
-        gameOverScreen.SetActive(true);
     }
 
 }
