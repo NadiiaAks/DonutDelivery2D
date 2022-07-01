@@ -12,10 +12,8 @@ public class DriverController : MonoBehaviour
 
     [Header("Timers")]
     [SerializeField] private float timeToWaitBooster;
-    [SerializeField] private float timeToWaitSlowdown;
     [SerializeField] private float timeToWaitCatch;
     [SerializeField] private float timeToDeleteBooster;
-    [SerializeField] private float timeToDeleteSlowdown;
     [SerializeField] private float timeToDeleteCatch;
     [SerializeField] private float boosterTime;
     [SerializeField] private float slowdownTime;
@@ -49,9 +47,7 @@ public class DriverController : MonoBehaviour
     private float _boosterTime;
 
     // for slowdowns
-    private float _waitTimeSlowdown;
     private bool _isSlow = false;
-    private bool _isWaitingSlowdown = true;
     private float _slowdownTime;
 
 
@@ -68,7 +64,6 @@ public class DriverController : MonoBehaviour
         _slowdown = GameObject.FindGameObjectWithTag("Slow");
         _catch = GameObject.FindGameObjectWithTag("Catch");
         _waitTimeBooster = timeToWaitBooster;
-        _waitTimeSlowdown = timeToWaitSlowdown;
         _boosterTime = boosterTime;
         _slowdownTime = slowdownTime;
 
@@ -90,7 +85,6 @@ public class DriverController : MonoBehaviour
         GoWithBooster();
 
         //Slowdown work
-        SlowDownRespawn();
         GoWithSlowdown();
 
         //CatchWork
@@ -117,11 +111,6 @@ public class DriverController : MonoBehaviour
         _newBooster = Instantiate(_booster, boosterPosition[Random.Range(0, boosterPosition.Count)], Quaternion.Euler(0,0,0));
     }
 
-    void CreateObjectSlowdown()
-    {
-        _newSlowdown = Instantiate(_slowdown, slowdownPosition[Random.Range(0, slowdownPosition.Count)], Quaternion.Euler(0, 0, 0));
-    }
-
     void CreateObjectCatch()
     {
         _newCatch = Instantiate(_catch, catchPosition[Random.Range(0, catchPosition.Count)], Quaternion.Euler(0, 0, 0));
@@ -134,14 +123,6 @@ public class DriverController : MonoBehaviour
         Destroy(_newBooster);
         _isWaitingBooster = true;
 
-    }
-
-    IEnumerator SlowdownEmergence()
-    {
-        CreateObjectSlowdown();
-        yield return new WaitForSeconds(timeToDeleteSlowdown);
-        Destroy(_newSlowdown);
-        _isWaitingSlowdown = true;
     }
 
     IEnumerator CatchEmergence()
@@ -173,22 +154,6 @@ public class DriverController : MonoBehaviour
         }
     }
 
-    //Timer for respawn slowdown
-    private void SlowDownRespawn()
-    {
-        if (_isWaitingSlowdown && !_isSlow)
-        {
-            _moveSpeed = moveSpeed;
-            _waitTimeSlowdown -= Time.deltaTime;
-
-            if (_waitTimeSlowdown < 0f)
-            {
-                _waitTimeSlowdown = timeToWaitSlowdown;
-                _isWaitingSlowdown = false;
-                StartCoroutine(SlowdownEmergence());
-            }
-        }
-    }
 
     //Timer for respawn catch
     private void CatchRespawn()
@@ -228,6 +193,10 @@ public class DriverController : MonoBehaviour
                 _slowdownTime = slowdownTime;
                 _isSlow = false;
             }
+        }
+        else if (_isSlow)
+        {
+            _moveSpeed = moveSpeed;
         }
 
     }
@@ -276,6 +245,11 @@ public class DriverController : MonoBehaviour
             _isCatch = true;
             CountCatch();
         }
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        _isSlow = true;
     }
 
 }
