@@ -20,7 +20,6 @@ public class DriverController : MonoBehaviour
 
     [Header("Positions")]
     [SerializeField] private List<Vector3> boosterPosition;
-    [SerializeField] private List<Vector3> slowdownPosition;
     [SerializeField] private List<Vector3> catchPosition;
 
     [Header("Catch")]
@@ -29,8 +28,6 @@ public class DriverController : MonoBehaviour
     private FixedJoystick _fixedJoystick;
     private GameObject _booster;
     private GameObject _newBooster;
-    private GameObject _slowdown;
-    private GameObject _newSlowdown;
     private GameObject _catch;
     private GameObject _newCatch;
 
@@ -61,7 +58,6 @@ public class DriverController : MonoBehaviour
         _moveSpeed = moveSpeed;
         _fixedJoystick = GameObject.FindGameObjectWithTag("Joystick").GetComponent<FixedJoystick>();
         _booster = GameObject.FindGameObjectWithTag("Boost");
-        _slowdown = GameObject.FindGameObjectWithTag("Slow");
         _catch = GameObject.FindGameObjectWithTag("Catch");
         _waitTimeBooster = timeToWaitBooster;
         _boosterTime = boosterTime;
@@ -114,6 +110,10 @@ public class DriverController : MonoBehaviour
     void CreateObjectCatch()
     {
         _newCatch = Instantiate(_catch, catchPosition[Random.Range(0, catchPosition.Count)], Quaternion.Euler(0, 0, 0));
+        //for (int i = 0; i < catchPosition.Count; i++)
+        //{
+            //_newCatch = Instantiate(_catch, catchPosition[i], Quaternion.Euler(0, 0, 0));
+        //}
     }
 
     IEnumerator BoostEmergence()
@@ -230,6 +230,7 @@ public class DriverController : MonoBehaviour
     {
         if (other.tag == "Boost")
         {
+            Destroy(_newBooster);
             _moveSpeed = boostSpeed;
             _isBoosting = true;
         }
