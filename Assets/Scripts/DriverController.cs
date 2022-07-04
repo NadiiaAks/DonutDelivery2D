@@ -23,7 +23,10 @@ public class DriverController : MonoBehaviour
     [SerializeField] private List<Vector3> catchPosition;
 
     [Header("Catch")]
-    [SerializeField] private int CatchInLevel;
+    [SerializeField] private int catchInLevel;
+
+    [Header("Effects")]
+    [SerializeField] ParticleSystem boostEffect;
 
     private FixedJoystick _fixedJoystick;
     private GameObject _booster;
@@ -175,6 +178,7 @@ public class DriverController : MonoBehaviour
             if (_boosterTime < 0f)
             {
                 _boosterTime = boosterTime;
+                boostEffect.Stop();
                 _isBoosting = false;
             }
         }
@@ -210,7 +214,7 @@ public class DriverController : MonoBehaviour
         }
 
 
-        if(_catchCount == CatchInLevel)
+        if(_catchCount == catchInLevel)
         {
             _isFull = true;
         }
@@ -223,7 +227,7 @@ public class DriverController : MonoBehaviour
 
     public int GetCatchInLevel()
     {
-        return CatchInLevel;
+        return catchInLevel;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -231,6 +235,7 @@ public class DriverController : MonoBehaviour
         if (other.tag == "Boost")
         {
             Destroy(_newBooster);
+            boostEffect.Play();
             _moveSpeed = boostSpeed;
             _isBoosting = true;
         }
@@ -250,6 +255,7 @@ public class DriverController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
+        boostEffect.Stop();
         _isSlow = true;
     }
 
