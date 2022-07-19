@@ -5,10 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class FinishLvlScreen : MonoBehaviour
 {
-    [SerializeField] private int nextScene;
     public void NextLvlBtn()
     {
-        SceneManager.LoadScene(nextScene);
+        Scene scene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(scene.buildIndex + 1);
+        Time.timeScale = 1f;
     }
 
     public void ExitBtn()

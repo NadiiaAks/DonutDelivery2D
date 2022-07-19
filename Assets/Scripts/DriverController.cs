@@ -199,7 +199,7 @@ public class DriverController : MonoBehaviour
                 _isSlow = false;
             }
         }
-        else if (_isSlow)
+        else if (!_isSlow && !_isBoosting)
         {
             _moveSpeed = moveSpeed;
         }
@@ -211,7 +211,6 @@ public class DriverController : MonoBehaviour
         if (!_isFull)
         {
             _catchCount++;
-            Debug.Log(_catchCount);
         }
 
 
@@ -233,6 +232,7 @@ public class DriverController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+
         if (other.tag == "Boost")
         {
             Destroy(_newBooster);
@@ -241,7 +241,7 @@ public class DriverController : MonoBehaviour
             _isBoosting = true;
         }
 
-        if(other.tag == "Slow")
+        if(!_isBoosting)
         {
             _moveSpeed = slowSpeed;
             _isSlow = true;
@@ -249,14 +249,16 @@ public class DriverController : MonoBehaviour
 
         if(other.tag == "Catch")
         {
+            _isSlow = false;
+            Debug.Log(_moveSpeed);
             _isCatch = true;
             CountCatch();
         }
+
     }
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        boostEffect.Stop();
         _isSlow = true;
     }
 
